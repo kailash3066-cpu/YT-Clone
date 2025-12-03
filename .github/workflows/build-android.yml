@@ -6,8 +6,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # Use a simple workspace-based gradle cache path to avoid runner.temp expression errors
     env:
-      GRADLE_USER_HOME: ${{ runner.temp }}/.gradle
+      GRADLE_USER_HOME: ${{ github.workspace }}/.gradle
 
     steps:
       - name: Checkout code
@@ -20,11 +21,11 @@ jobs:
           java-version: '17'
 
       - name: Make gradlew executable
-        # adjust path if your gradlew lives elsewhere
-        run: chmod +x "App project/gradlew" || chmod +x "Android/project/gradlew" || true
+        # adjust path if your gradlew is elsewhere
+        run: |
+          chmod +x "App project/gradlew" || chmod +x "Android/project/gradlew" || chmod +x gradlew || true
 
       - name: Build debug APK (try common project paths)
-        # try two likely working directories; if first fails we'll still try second
         run: |
           if [ -f "App project/gradlew" ]; then
             cd "App project" && ./gradlew assembleDebug --no-daemon
