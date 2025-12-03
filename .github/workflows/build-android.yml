@@ -6,7 +6,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    # Use a simple workspace-based gradle cache path to avoid runner.temp expression errors
     env:
       GRADLE_USER_HOME: ${{ github.workspace }}/.gradle
 
@@ -20,8 +19,7 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Make gradlew executable
-        # adjust path if your gradlew is elsewhere
+      - name: Make gradlew executable (try common paths)
         run: |
           chmod +x "App project/gradlew" || chmod +x "Android/project/gradlew" || chmod +x gradlew || true
 
